@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3 uid="uid://34hew5he4833"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_kc1kn"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 2.5
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f1g6k"]
+shading_mode = 2
+specular_mode = 2
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.282353, 0.282353, 0.282353, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ukiy4"]
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.05
+radial_segments = 6
+rings = 1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_uqoy0"]
+radius = 0.05
+height = 0.2
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1nur1"]
+shading_mode = 0
+specular_mode = 2
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.87451, 0.87451, 0.490196, 1)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fexay"]
+height = 2.63953
+radius = 0.0599478
+
+[node name="lamp_post" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+mesh = SubResource("CylinderMesh_kc1kn")
+surface_material_override/0 = SubResource("StandardMaterial3D_f1g6k")
+
+[node name="lamp_top" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+mesh = SubResource("CylinderMesh_ukiy4")
+surface_material_override/0 = SubResource("StandardMaterial3D_f1g6k")
+
+[node name="lamp" type="MeshInstance3D" parent="lamp_top"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0435388, 0)
+mesh = SubResource("CapsuleMesh_uqoy0")
+surface_material_override/0 = SubResource("StandardMaterial3D_1nur1")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="lamp_top/lamp"]
+light_color = Color(0.87451, 0.87451, 0.490196, 1)
+
+[node name="static_body" type="StaticBody3D" parent="."]
+
+[node name="shape" type="CollisionShape3D" parent="static_body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
+shape = SubResource("CylinderShape3D_fexay")
