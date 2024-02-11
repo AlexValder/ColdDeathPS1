@@ -1,29 +1,66 @@
-[gd_scene load_steps=8 format=3 uid="uid://blo8drjrgqebo"]
+[gd_scene load_steps=16 format=3 uid="uid://blo8drjrgqebo"]
 
+[ext_resource type="Texture2D" uid="uid://g5mi5err540a" path="res://assets/textures/GroundSnow.png" id="1_0lsa0"]
 [ext_resource type="PackedScene" uid="uid://34hew5he4833" path="res://props/lamp_post.tscn" id="1_bcx6s"]
-[ext_resource type="Material" uid="uid://0o1a6jv4h827" path="res://assets/materials/ground_snowy.tres" id="1_bekik"]
-[ext_resource type="Script" path="res://levels/player.gd" id="2_bs6tu"]
+[ext_resource type="Script" path="res://levels/dev_level.gd" id="1_o7r8m"]
+[ext_resource type="Texture2D" uid="uid://77awe6fruvsj" path="res://assets/textures/night_sky.png" id="2_orssw"]
+[ext_resource type="PackedScene" uid="uid://7ao8kw8l7aql" path="res://player/player.tscn" id="3_1caxw"]
+[ext_resource type="Texture2D" uid="uid://bmui4yjmejn06" path="res://assets/textures/Fence.png" id="3_vh4to"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_t5ba3"]
+panorama = ExtResource("2_orssw")
+filter = false
+
+[sub_resource type="Sky" id="Sky_tvo7m"]
+sky_material = SubResource("PanoramaSkyMaterial_t5ba3")
+
+[sub_resource type="Environment" id="Environment_utptx"]
+background_mode = 2
+sky = SubResource("Sky_tvo7m")
+ambient_light_source = 3
 
 [sub_resource type="QuadMesh" id="QuadMesh_uc45g"]
 size = Vector2(20, 20)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8xsfh"]
+shading_mode = 2
+diffuse_mode = 1
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_0lsa0")
+texture_filter = 0
+
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_pxso4"]
 data = PackedVector3Array(10, -10, 0, -10, -10, 0, 10, 10, 0, -10, -10, 0, -10, 10, 0, 10, 10, 0)
 
-[sub_resource type="Environment" id="Environment_8v42k"]
+[sub_resource type="QuadMesh" id="QuadMesh_2mdbj"]
+size = Vector2(20, 2.5)
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_n4ksu"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lug8s"]
+shading_mode = 2
+diffuse_mode = 1
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("3_vh4to")
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 0
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_1ft4s"]
+data = PackedVector3Array(10, -1.25, 0, -10, -1.25, 0, 10, 1.25, 0, -10, -1.25, 0, -10, 1.25, 0, 10, 1.25, 0)
 
 [node name="dev_level" type="Node3D"]
+script = ExtResource("1_o7r8m")
 
 [node name="level" type="Node3D" parent="."]
 metadata/_edit_lock_ = true
+
+[node name="env" type="WorldEnvironment" parent="level"]
+environment = SubResource("Environment_utptx")
 
 [node name="ground" type="MeshInstance3D" parent="level"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 cast_shadow = 0
 mesh = SubResource("QuadMesh_uc45g")
-surface_material_override/0 = ExtResource("1_bekik")
+surface_material_override/0 = SubResource("StandardMaterial3D_8xsfh")
 
 [node name="static_body" type="StaticBody3D" parent="level/ground"]
 
@@ -31,21 +68,55 @@ surface_material_override/0 = ExtResource("1_bekik")
 shape = SubResource("ConcavePolygonShape3D_pxso4")
 
 [node name="lamp_post" parent="level" instance=ExtResource("1_bcx6s")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.25, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.92445, 1.25, -7.69756)
 
 [node name="lamp_post2" parent="level" instance=ExtResource("1_bcx6s")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.02495, 1.25, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.43375, 1.25, -8.18549)
 
-[node name="env" type="WorldEnvironment" parent="level"]
-environment = SubResource("Environment_8v42k")
+[node name="lamp_post3" parent="level" instance=ExtResource("1_bcx6s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.11662, 1.25, 1.5513)
 
-[node name="player" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8156, 0)
-script = ExtResource("2_bs6tu")
+[node name="lamp_post4" parent="level" instance=ExtResource("1_bcx6s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.16664, 1.25, 7.05453)
 
-[node name="shape" type="CollisionShape3D" parent="player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_n4ksu")
+[node name="fence_x_minus" type="MeshInstance3D" parent="level"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -10, 1.25, 0)
+mesh = SubResource("QuadMesh_2mdbj")
+surface_material_override/0 = SubResource("StandardMaterial3D_lug8s")
 
-[node name="camera" type="Camera3D" parent="player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+[node name="static_body" type="StaticBody3D" parent="level/fence_x_minus"]
+
+[node name="shape" type="CollisionShape3D" parent="level/fence_x_minus/static_body"]
+shape = SubResource("ConcavePolygonShape3D_1ft4s")
+
+[node name="fence_x_plus" type="MeshInstance3D" parent="level"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 10, 1.25, 0)
+mesh = SubResource("QuadMesh_2mdbj")
+surface_material_override/0 = SubResource("StandardMaterial3D_lug8s")
+
+[node name="static_body" type="StaticBody3D" parent="level/fence_x_plus"]
+
+[node name="shape" type="CollisionShape3D" parent="level/fence_x_plus/static_body"]
+shape = SubResource("ConcavePolygonShape3D_1ft4s")
+
+[node name="fence_z_minus" type="MeshInstance3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -10)
+mesh = SubResource("QuadMesh_2mdbj")
+surface_material_override/0 = SubResource("StandardMaterial3D_lug8s")
+
+[node name="static_body" type="StaticBody3D" parent="level/fence_z_minus"]
+
+[node name="shape" type="CollisionShape3D" parent="level/fence_z_minus/static_body"]
+shape = SubResource("ConcavePolygonShape3D_1ft4s")
+
+[node name="fence_z_plus" type="MeshInstance3D" parent="level"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.25, 10)
+mesh = SubResource("QuadMesh_2mdbj")
+surface_material_override/0 = SubResource("StandardMaterial3D_lug8s")
+
+[node name="static_body" type="StaticBody3D" parent="level/fence_z_plus"]
+
+[node name="shape" type="CollisionShape3D" parent="level/fence_z_plus/static_body"]
+shape = SubResource("ConcavePolygonShape3D_1ft4s")
+
+[node name="player" parent="." instance=ExtResource("3_1caxw")]

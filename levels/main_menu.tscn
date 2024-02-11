@@ -1,0 +1,73 @@
+[gd_scene load_steps=6 format=3 uid="uid://b0xsr33mugo4a"]
+
+[ext_resource type="Theme" uid="uid://p1q4l0lkinwt" path="res://assets/default_theme.tres" id="1_3lx6l"]
+[ext_resource type="FontFile" uid="uid://dhkmovkv7qg06" path="res://assets/fonts/DungeonFont.ttf" id="1_arb3a"]
+[ext_resource type="Script" path="res://levels/main_menu.gd" id="1_ddvv0"]
+
+[sub_resource type="Environment" id="Environment_h5jrq"]
+background_mode = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_yka4v"]
+font = ExtResource("1_arb3a")
+font_size = 48
+font_color = Color(0.556863, 0.670588, 0.952941, 1)
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[node name="main_menu" type="Node3D"]
+script = ExtResource("1_ddvv0")
+
+[node name="camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.21085)
+environment = SubResource("Environment_h5jrq")
+
+[node name="menu" type="CanvasLayer" parent="."]
+
+[node name="title" type="Label" parent="menu"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 49.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "SnowDeath"
+label_settings = SubResource("LabelSettings_yka4v")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="main_vbox" type="VBoxContainer" parent="menu"]
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -38.5
+offset_right = 38.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme = ExtResource("1_3lx6l")
+alignment = 1
+
+[node name="play" type="Button" parent="menu/main_vbox"]
+layout_mode = 2
+text = "play"
+
+[node name="options" type="Button" parent="menu/main_vbox"]
+layout_mode = 2
+text = "options"
+
+[node name="quit" type="Button" parent="menu/main_vbox"]
+layout_mode = 2
+text = "quit"
+
+[node name="settings_grid" type="GridContainer" parent="menu"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="button_up" from="menu/main_vbox/play" to="." method="_on_play_button_up"]
+[connection signal="button_up" from="menu/main_vbox/options" to="." method="_on_options_button_up"]
+[connection signal="button_up" from="menu/main_vbox/quit" to="." method="_on_quit_button_up"]

@@ -2,26 +2,27 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://g5mi5err540a"
-path="res://.godot/imported/GroundSnow.png-f45c6f4002d714d5049002c52279efe3.ctex"
+uid="uid://bmui4yjmejn06"
+path.s3tc="res://.godot/imported/Fence.png-f84bd82babbae3915a00dc0bae05469d.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
-source_file="res://assets/textures/GroundSnow.png"
-dest_files=["res://.godot/imported/GroundSnow.png-f45c6f4002d714d5049002c52279efe3.ctex"]
+source_file="res://assets/textures/Fence.png"
+dest_files=["res://.godot/imported/Fence.png-f84bd82babbae3915a00dc0bae05469d.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
-compress/channel_pack=1
-mipmaps/generate=false
+compress/channel_pack=0
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
