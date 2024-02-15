@@ -1,64 +1,33 @@
 extends CharacterBody3D
-class_name Player
+class_name PlayerChar
 
-const SPEED := 3.0
-const RUN_SPEED := 5.0
-const CROUCH_SPEED := 2.0
-const GRAVITY := 98.0*1.5
-const JUMP = 200.0
 
-@onready var camera := $camera as PlayerCamera
+@onready var camera := $shape/camera as PlayerCamera
 @onready var _shape := $shape as CollisionShape3D
 @onready var _cyl_shape := _shape.shape as CapsuleShape3D
+@onready var _machine := $state_machine as FiniteStateMachine
 
 var _tween: Tween = null
 
 
-func _unhandled_input(event: InputEvent) -> void:
-    if event is InputEventMouseMotion:
-        var e := event as InputEventMouseMotion
-        rotate_y(-e.relative.x * camera.mouse_sens)
-    elif event.is_action_pressed("crouch"):
-        _change_height(0.9)
-    elif event.is_action_released("crouch"):
-        _change_height(2.0)
-
-
-func _change_height(to: float) -> void:
+func change_height(to: float) -> void:
     if _tween:
         _tween.kill()
         _tween = null
 
     _tween = create_tween()
+    _tween.set_parallel()
     _tween.tween_property(_cyl_shape, "height", to, 0.1)\
+        .set_ease(Tween.EASE_OUT)
+    _tween.tween_property(_shape, "position:y", to/2, 0.1)\
         .set_ease(Tween.EASE_OUT)
     _tween.play()
 
 
-func _physics_process(delta: float) -> void:
-    var movement := Input.get_vector("left", "right", "forward", "backwards")
-    var look := Input.get_axis("look_right", "look_left") * camera.joy_sens
-
-    rotate_y(look * delta)
-
-    velocity = global_transform.basis *\
-        Vector3(movement.x, velocity.y, movement.y) * _speed()
-    if Input.is_action_just_pressed("run"):
-        velocity.y = JUMP
-    else:
-        velocity.y -= GRAVITY * delta
-
-    if is_zero_approx(movement.length()) or !is_on_floor():
-        camera.stop_head_bob()
-    else:
-        camera.head_bob(velocity, delta)
-    move_and_slide()
+func _ready() -> void:
+    camera.player = self
+    _machine.change_state("idle")
 
 
-func _speed() -> float:
-    if Input.is_action_pressed("run"):
-        return RUN_SPEED
-    elif Input.is_action_pressed("crouch"):
-        return CROUCH_SPEED
-    else:
-        return SPEED
+func _on_state_machine_state_changed(new_state: PlayerState) -> void:
+    ($HUD/state as Label).text = new_state.name

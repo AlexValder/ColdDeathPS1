@@ -2,9 +2,9 @@ extends VBoxContainer
 
 
 func _ready() -> void:
-    $settings_grid/vsync.button_pressed =\
+    ($settings_grid/vsync as Button).button_pressed =\
         DisplayServer.window_get_vsync_mode() == DisplayServer.VSYNC_ENABLED
-    $"settings_grid/43res".button_pressed =\
+    ($"settings_grid/43res" as Button).button_pressed =\
         get_tree().root.content_scale_aspect == Window.CONTENT_SCALE_ASPECT_KEEP
 
 

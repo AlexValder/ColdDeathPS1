@@ -1,9 +1,15 @@
-[gd_scene load_steps=10 format=3 uid="uid://7ao8kw8l7aql"]
+[gd_scene load_steps=15 format=3 uid="uid://7ao8kw8l7aql"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_ursg7"]
 [ext_resource type="Script" path="res://player/camera.gd" id="2_5g5xe"]
 [ext_resource type="Theme" uid="uid://p1q4l0lkinwt" path="res://assets/default_theme.tres" id="3_tla02"]
-[ext_resource type="AnimationLibrary" uid="uid://b35mk8pdcdcq7" path="res://assets/animations/player.res" id="4_nyj52"]
+[ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="5_fpj7l"]
+[ext_resource type="Script" path="res://player/state_machine/idle.gd" id="6_q7ndq"]
+[ext_resource type="Script" path="res://player/state_machine/fall.gd" id="7_pvylh"]
+[ext_resource type="Script" path="res://player/state_machine/walk.gd" id="8_ntn15"]
+[ext_resource type="Script" path="res://player/state_machine/run.gd" id="9_nbgsp"]
+[ext_resource type="Script" path="res://player/state_machine/crouch.gd" id="10_2x1ap"]
+[ext_resource type="Script" path="res://player/state_machine/jump.gd" id="10_3xthg"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_n4ksu"]
 
@@ -19,24 +25,10 @@ func _process(_delta: float) -> void:
     text = \"%d FPS\" % Engine.get_frames_per_second()
 "
 
-[sub_resource type="Animation" id="Animation_xluw6"]
-length = 0.001
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("camera:position:y")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(1.7, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_h4sp0"]
-_data = {
-"RESET": SubResource("Animation_xluw6")
-}
+[sub_resource type="LabelSettings" id="LabelSettings_kpvj8"]
+font_color = Color(1, 0, 0, 1)
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
 
 [node name="player" type="CharacterBody3D"]
 script = ExtResource("1_ursg7")
@@ -45,10 +37,10 @@ script = ExtResource("1_ursg7")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_n4ksu")
 
-[node name="camera" type="Camera3D" parent="." node_paths=PackedStringArray("player")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+[node name="camera" type="Camera3D" parent="shape" node_paths=PackedStringArray("player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 script = ExtResource("2_5g5xe")
-player = NodePath("..")
+player = NodePath("../..")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
@@ -68,9 +60,53 @@ horizontal_alignment = 2
 uppercase = true
 script = SubResource("GDScript_eckwd")
 
-[node name="anim_player" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_h4sp0"),
-"player": ExtResource("4_nyj52")
-}
-autoplay = "player/idle"
+[node name="state" type="Label" parent="HUD"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 16.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme = ExtResource("3_tla02")
+text = "state"
+label_settings = SubResource("LabelSettings_kpvj8")
+horizontal_alignment = 1
+
+[node name="state_machine" type="Node" parent="."]
+script = ExtResource("5_fpj7l")
+
+[node name="idle" type="Node" parent="state_machine" node_paths=PackedStringArray("player")]
+script = ExtResource("6_q7ndq")
+player = NodePath("../..")
+
+[node name="fall" type="Node" parent="state_machine" node_paths=PackedStringArray("player")]
+script = ExtResource("7_pvylh")
+player = NodePath("../..")
+
+[node name="walk" type="Node" parent="state_machine" node_paths=PackedStringArray("player")]
+script = ExtResource("8_ntn15")
+head_bob_ampl = 1.0
+head_bob_freq = 9.0
+player = NodePath("../..")
+
+[node name="run" type="Node" parent="state_machine" node_paths=PackedStringArray("player")]
+script = ExtResource("9_nbgsp")
+speed = 5.0
+head_bob_ampl = 1.4
+head_bob_freq = 20.0
+player = NodePath("../..")
+
+[node name="crouch" type="Node" parent="state_machine" node_paths=PackedStringArray("player")]
+script = ExtResource("10_2x1ap")
+speed = 2.0
+head_bob_ampl = 1.5
+head_bob_freq = 9.0
+player = NodePath("../..")
+
+[node name="jump" type="Node" parent="state_machine" node_paths=PackedStringArray("player")]
+script = ExtResource("10_3xthg")
+player = NodePath("../..")
+
+[connection signal="state_changed" from="state_machine" to="." method="_on_state_machine_state_changed"]

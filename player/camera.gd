@@ -1,78 +1,60 @@
 extends Camera3D
 class_name PlayerCamera
 
-@export var player := Player
+@export var player: PlayerChar
 var mouse_sens := 0.01/5
 var joy_sens := 1.5
 var _time := 0.0
 var _tween: Tween = null
+var _freq := 0.0
+var _ampl := 0.0
+var _is_bobbing := false
 
-const CONSTANTS := {
-    "freq_run": 20.0,
-    "freq_crouch": 9.0,
-    "freq_default": 9.0,
-    "ampl_run": 0.7,
-    "ampl_crouch": 0.4,
-    "ampl_default": 0.5,
-    "player_height": 1.7,
-    "max_angle": PI/2,
-    "min_angle": -5*PI/2,
-}
+const MAX_ANGLE := PI/2
+const MIN_ANGLE := -5*PI/12
+const PLAYER_HEIGHT := 0.7
 
 
-func head_bob() -> void:
-    var freq := _get_freq()
-    var ampl := _get_ampl()
-    var delta := get_physics_process_delta_time()
+func start_head_bob(freq: float, ampl: float) -> void:
+    _freq = freq
+    _ampl = ampl
+    _is_bobbing = true
+
+
+func _physics_process(delta: float) -> void:
+    if _is_bobbing:
+        _head_bob(_freq, _ampl, delta)
+
+
+func _head_bob(freq: float, ampl: float, delta: float) -> void:
     _time += delta
-    var movement = cos(_time * freq) * ampl
+    var movement: = absf(cos(_time * freq)) * ampl
 
     if abs(player.velocity.x) || abs(player.velocity.z) > 0.1:
-        position.y += movement * delta
+        position.y = PLAYER_HEIGHT + movement * delta
 
 
 func stop_head_bob() -> void:
+    _is_bobbing = false
     _time = 0.0
     create_tween().tween_property(self, "position:y",\
-        CONSTANTS.player_height, 0.1).set_ease(Tween.EASE_OUT)
-
-
-func _get_freq() -> float:
-    if Input.is_action_pressed("run"):
-        return CONSTANTS.freq_run
-    elif Input.is_action_pressed("crouch"):
-        return CONSTANTS.freq_crouch
-    else:
-        return CONSTANTS.freq_default
-
-
-func _get_ampl() -> float:
-    if Input.is_action_pressed("run"):
-        return CONSTANTS.ampl_run
-    elif Input.is_action_pressed("crouch"):
-        return CONSTANTS.ampl_crouch
-    else:
-        return CONSTANTS.ampl_default
+        PLAYER_HEIGHT, 0.05).set_ease(Tween.EASE_OUT)
 
 
 func _unhandled_input(event: InputEvent) -> void:
     if event is InputEventMouseMotion:
         var e := event as InputEventMouseMotion
         rotation.x = clampf(rotation.x - e.relative.y * mouse_sens,
-            CONSTANTS.min_angle, CONSTANTS.max_angle)
-    elif event.is_action_pressed("run"):
-        _change_fov(80.0)
-    elif event.is_action_released("run"):
-        _change_fov(75.0)
+            MIN_ANGLE, MAX_ANGLE)
 
 
 func _process(delta: float) -> void:
     var look := Input.get_axis("look_up", "look_down")
     rotation.x = clampf(rotation.x + look * joy_sens * delta,
-        CONSTANTS.min_angle, CONSTANTS.max_angle)
+        MIN_ANGLE, MAX_ANGLE)
 
 
-func _change_fov(new_fov: float) -> void:
+func change_fov(new_fov: float) -> void:
     if _tween:
         _tween.kill()
         _tween = null
