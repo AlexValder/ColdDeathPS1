@@ -5,6 +5,7 @@ const SPEED := 3.0
 const RUN_SPEED := 5.0
 const CROUCH_SPEED := 2.0
 const GRAVITY := 98.0*1.5
+const JUMP = 200.0
 
 @onready var camera := $camera as PlayerCamera
 @onready var _shape := $shape as CollisionShape3D
@@ -18,23 +19,20 @@ func _unhandled_input(event: InputEvent) -> void:
         var e := event as InputEventMouseMotion
         rotate_y(-e.relative.x * camera.mouse_sens)
     elif event.is_action_pressed("crouch"):
-        if _tween:
-            _tween.kill()
-            _tween = null
-
-        _tween = create_tween()
-        _tween.tween_property(_cyl_shape, "height", 0.9, 0.1)\
-            .set_ease(Tween.EASE_OUT)
-        _tween.play()
+        _change_height(0.9)
     elif event.is_action_released("crouch"):
-        if _tween:
-            _tween.kill()
-            _tween = null
+        _change_height(2.0)
 
-        _tween = create_tween()
-        _tween.tween_property(_cyl_shape, "height", 2, 0.1)\
-            .set_ease(Tween.EASE_OUT)
-        _tween.play()
+
+func _change_height(to: float) -> void:
+    if _tween:
+        _tween.kill()
+        _tween = null
+
+    _tween = create_tween()
+    _tween.tween_property(_cyl_shape, "height", to, 0.1)\
+        .set_ease(Tween.EASE_OUT)
+    _tween.play()
 
 
 func _physics_process(delta: float) -> void:
@@ -44,7 +42,16 @@ func _physics_process(delta: float) -> void:
     rotate_y(look * delta)
 
     velocity = global_transform.basis *\
-        Vector3(movement.x, -GRAVITY * delta, movement.y) * _speed()
+        Vector3(movement.x, velocity.y, movement.y) * _speed()
+    if Input.is_action_just_pressed("run"):
+        velocity.y = JUMP
+    else:
+        velocity.y -= GRAVITY * delta
+
+    if is_zero_approx(movement.length()) or !is_on_floor():
+        camera.stop_head_bob()
+    else:
+        camera.head_bob(velocity, delta)
     move_and_slide()
 
 

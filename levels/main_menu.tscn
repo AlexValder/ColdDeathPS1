@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://b0xsr33mugo4a"]
+[gd_scene load_steps=7 format=3 uid="uid://b0xsr33mugo4a"]
 
 [ext_resource type="Theme" uid="uid://p1q4l0lkinwt" path="res://assets/default_theme.tres" id="1_3lx6l"]
 [ext_resource type="FontFile" uid="uid://dhkmovkv7qg06" path="res://assets/fonts/DungeonFont.ttf" id="1_arb3a"]
-[ext_resource type="Script" path="res://levels/main_menu.gd" id="1_ddvv0"]
+[ext_resource type="Script" path="res://levels/main_menu/main_menu.gd" id="1_ddvv0"]
+[ext_resource type="Script" path="res://levels/main_menu/settings_vbox.gd" id="4_smilp"]
 
 [sub_resource type="Environment" id="Environment_h5jrq"]
 background_mode = 1
@@ -23,7 +24,17 @@ environment = SubResource("Environment_h5jrq")
 
 [node name="menu" type="CanvasLayer" parent="."]
 
-[node name="title" type="Label" parent="menu"]
+[node name="root" type="Control" parent="menu"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_3lx6l")
+
+[node name="title" type="Label" parent="menu/root"]
+layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 49.0
@@ -35,39 +46,87 @@ label_settings = SubResource("LabelSettings_yka4v")
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="main_vbox" type="VBoxContainer" parent="menu"]
-anchors_preset = 13
+[node name="main_vbox" type="VBoxContainer" parent="menu/root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -38.5
+offset_top = 64.0
 offset_right = 38.5
+offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
-theme = ExtResource("1_3lx6l")
 alignment = 1
 
-[node name="play" type="Button" parent="menu/main_vbox"]
+[node name="play" type="Button" parent="menu/root/main_vbox"]
 layout_mode = 2
 text = "play"
 
-[node name="options" type="Button" parent="menu/main_vbox"]
+[node name="options" type="Button" parent="menu/root/main_vbox"]
 layout_mode = 2
 text = "options"
 
-[node name="quit" type="Button" parent="menu/main_vbox"]
+[node name="quit" type="Button" parent="menu/root/main_vbox"]
 layout_mode = 2
 text = "quit"
 
-[node name="settings_grid" type="GridContainer" parent="menu"]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
+[node name="settings_vbox" type="VBoxContainer" parent="menu/root"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
 anchor_bottom = 1.0
+offset_left = -88.0
+offset_top = 64.0
+offset_right = 88.0
+offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
+alignment = 1
+script = ExtResource("4_smilp")
 
-[connection signal="button_up" from="menu/main_vbox/play" to="." method="_on_play_button_up"]
-[connection signal="button_up" from="menu/main_vbox/options" to="." method="_on_options_button_up"]
-[connection signal="button_up" from="menu/main_vbox/quit" to="." method="_on_quit_button_up"]
+[node name="settings_grid" type="GridContainer" parent="menu/root/settings_vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+
+[node name="label00" type="Label" parent="menu/root/settings_vbox/settings_grid"]
+layout_mode = 2
+text = "V-Sync"
+
+[node name="vsync" type="CheckButton" parent="menu/root/settings_vbox/settings_grid"]
+layout_mode = 2
+button_pressed = true
+
+[node name="label01" type="Label" parent="menu/root/settings_vbox/settings_grid"]
+layout_mode = 2
+text = "4:3 Resolution"
+
+[node name="43res" type="CheckButton" parent="menu/root/settings_vbox/settings_grid"]
+layout_mode = 2
+button_pressed = true
+
+[node name="label02" type="Label" parent="menu/root/settings_vbox/settings_grid"]
+layout_mode = 2
+text = "Filter"
+
+[node name="filter" type="CheckButton" parent="menu/root/settings_vbox/settings_grid"]
+layout_mode = 2
+disabled = true
+
+[node name="back" type="Button" parent="menu/root/settings_vbox"]
+layout_mode = 2
+text = "Back"
+
+[connection signal="button_up" from="menu/root/main_vbox/play" to="." method="_on_play_button_up"]
+[connection signal="button_up" from="menu/root/main_vbox/options" to="." method="_on_options_button_up"]
+[connection signal="button_up" from="menu/root/main_vbox/quit" to="." method="_on_quit_button_up"]
+[connection signal="toggled" from="menu/root/settings_vbox/settings_grid/vsync" to="menu/root/settings_vbox" method="_on_vsync_toggled"]
+[connection signal="toggled" from="menu/root/settings_vbox/settings_grid/43res" to="menu/root/settings_vbox" method="_on_res_toggled"]
+[connection signal="button_up" from="menu/root/settings_vbox/back" to="." method="_on_back_button_up"]
