@@ -12,7 +12,7 @@ func on_physics_process(delta: float) -> void:
 
     if Input.is_action_pressed("left") or Input.is_action_pressed("right") or\
         Input.is_action_pressed("forward") or Input.is_action_pressed("backwards"):
-        change_state("walk")
+        change_state("run" if Input.is_action_pressed("run") else "walk")
 
 
 func on_input(event: InputEvent) -> void:

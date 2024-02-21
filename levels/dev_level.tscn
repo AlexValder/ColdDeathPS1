@@ -17,7 +17,8 @@ sky_material = SubResource("PanoramaSkyMaterial_t5ba3")
 [sub_resource type="Environment" id="Environment_utptx"]
 background_mode = 2
 sky = SubResource("Sky_tvo7m")
-ambient_light_source = 3
+ambient_light_color = Color(0.141176, 0.145098, 0.258824, 1)
+ambient_light_sky_contribution = 0.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_uc45g"]
 size = Vector2(20, 20)

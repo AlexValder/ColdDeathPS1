@@ -50,7 +50,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
     var look := Input.get_axis("look_up", "look_down")
-    rotation.x = clampf(rotation.x + look * joy_sens * delta,
+    rotation.x = clampf(rotation.x - look * joy_sens * delta,
         MIN_ANGLE, MAX_ANGLE)
 
 

@@ -1,6 +1,5 @@
 extends PlayerState
-
-const GRAVITY := 98.0 / 3
+const GRAVITY := 98.0 / 4
 
 
 func on_entry() -> void:

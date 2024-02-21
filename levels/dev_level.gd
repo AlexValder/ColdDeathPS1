@@ -8,5 +8,5 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
     if event.is_action_pressed("ui_cancel"):
         get_tree().change_scene_to_file("res://levels/main_menu.tscn")
-    elif event.is_action_pressed("restart"):
-        get_tree().reload_current_scene()
+    #elif event.is_action_pressed("restart"):
+        #get_tree().reload_current_scene()

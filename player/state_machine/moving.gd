@@ -16,6 +16,8 @@ func on_physics_process(delta: float) -> void:
         change_state("fall")
 
     movement = Input.get_vector("left", "right", "forward", "backwards")
-    player.velocity = player.global_transform.basis *\
-        Vector3(movement.x, 0, movement.y) * speed
+    var move3d := Vector3(movement.x, 0, movement.y)
+    player.velocity = player.global_transform.basis * move3d * speed
     player.move_and_slide()
+    if player.is_on_wall() && is_zero_approx(move3d.length()):
+        change_state("idle")
