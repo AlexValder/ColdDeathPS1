@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://7ao8kw8l7aql"]
+[gd_scene load_steps=20 format=3 uid="uid://7ao8kw8l7aql"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_ursg7"]
 [ext_resource type="Script" path="res://player/camera.gd" id="2_5g5xe"]
@@ -31,8 +31,21 @@ font_color = Color(1, 0, 0, 1)
 outline_size = 1
 outline_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_36qod"]
-font_size = 18
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3pdui"]
+bg_color = Color(0, 0, 0, 1)
+corner_detail = 1
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_npxwa"]
+bg_color = Color(0.784314, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wukqx"]
+bg_color = Color(0, 0, 0, 1)
+corner_detail = 1
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cdes0"]
+bg_color = Color(0.164706, 0.368627, 0.85098, 1)
 
 [node name="player" type="CharacterBody3D"]
 script = ExtResource("1_ursg7")
@@ -44,10 +57,12 @@ value = 25.0
 delay = 5.0
 duration = 10.0
 output = NodePath("../HUD/stat/health")
+bar_color = Color(0.85098, 0, 0, 1)
 
 [node name="stamina" type="Node" parent="."]
 script = ExtResource("2_6vo58")
 output = NodePath("../HUD/stat/stamina")
+bar_color = Color(0.145098, 0.188235, 1, 1)
 
 [node name="shape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -93,32 +108,27 @@ horizontal_alignment = 1
 [node name="stat" type="GridContainer" parent="HUD"]
 offset_left = 16.0
 offset_top = 16.0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 116.0
+offset_bottom = 66.0
 theme = ExtResource("3_tla02")
-columns = 2
 
-[node name="label00" type="Label" parent="HUD/stat"]
+[node name="health" type="ProgressBar" parent="HUD/stat"]
+custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
-text = "Health:"
-label_settings = SubResource("LabelSettings_36qod")
+size_flags_horizontal = 3
+theme_override_styles/background = SubResource("StyleBoxFlat_3pdui")
+theme_override_styles/fill = SubResource("StyleBoxFlat_npxwa")
+value = 50.0
+show_percentage = false
 
-[node name="health" type="Label" parent="HUD/stat"]
-unique_name_in_owner = true
+[node name="stamina" type="ProgressBar" parent="HUD/stat"]
+custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
-text = "10.0"
-label_settings = SubResource("LabelSettings_36qod")
-
-[node name="label01" type="Label" parent="HUD/stat"]
-layout_mode = 2
-text = "Stamina:"
-label_settings = SubResource("LabelSettings_36qod")
-
-[node name="stamina" type="Label" parent="HUD/stat"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "10.0"
-label_settings = SubResource("LabelSettings_36qod")
+size_flags_horizontal = 3
+theme_override_styles/background = SubResource("StyleBoxFlat_wukqx")
+theme_override_styles/fill = SubResource("StyleBoxFlat_cdes0")
+value = 50.0
+show_percentage = false
 
 [node name="state_machine" type="Node" parent="."]
 script = ExtResource("5_fpj7l")
