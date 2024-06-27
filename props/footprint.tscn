@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://cptdnk785ebrp"]
+
+[ext_resource type="Texture2D" uid="uid://bwrqtvcd6twjf" path="res://assets/sprites/footprint.png" id="1_o7wge"]
+[ext_resource type="Script" path="res://props/footprint.gd" id="2_j661d"]
+
+[node name="foot" type="Node3D"]
+script = ExtResource("2_j661d")
+
+[node name="print" type="Sprite3D" parent="."]
+axis = 1
+texture_filter = 0
+texture = ExtResource("1_o7wge")
+
+[node name="timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="timer" to="." method="_on_timer_timeout"]

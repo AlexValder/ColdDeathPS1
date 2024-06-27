@@ -1,8 +1,9 @@
-[gd_scene load_steps=20 format=3 uid="uid://7ao8kw8l7aql"]
+[gd_scene load_steps=21 format=3 uid="uid://7ao8kw8l7aql"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_ursg7"]
 [ext_resource type="Script" path="res://player/camera.gd" id="2_5g5xe"]
 [ext_resource type="Script" path="res://resources/renewable_stat.gd" id="2_6vo58"]
+[ext_resource type="Script" path="res://player/footprinter.gd" id="3_bk0n4"]
 [ext_resource type="Theme" uid="uid://p1q4l0lkinwt" path="res://assets/default_theme.tres" id="3_tla02"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="5_fpj7l"]
 [ext_resource type="Script" path="res://player/state_machine/idle.gd" id="6_q7ndq"]
@@ -49,6 +50,14 @@ bg_color = Color(0.164706, 0.368627, 0.85098, 1)
 
 [node name="player" type="CharacterBody3D"]
 script = ExtResource("1_ursg7")
+
+[node name="footprinter" type="Node3D" parent="." node_paths=PackedStringArray("player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00999999, 0)
+script = ExtResource("3_bk0n4")
+player = NodePath("..")
+
+[node name="normal" type="Timer" parent="footprinter"]
+wait_time = 0.4
 
 [node name="health" type="Node" parent="."]
 script = ExtResource("2_6vo58")
@@ -143,6 +152,7 @@ player = NodePath("../..")
 
 [node name="walk" type="Node" parent="state_machine" node_paths=PackedStringArray("player")]
 script = ExtResource("8_ntn15")
+speed = 2.5
 head_bob_ampl = 1.0
 head_bob_freq = 9.0
 player = NodePath("../..")
@@ -151,7 +161,7 @@ player = NodePath("../..")
 script = ExtResource("9_nbgsp")
 speed = 5.0
 head_bob_ampl = 1.4
-head_bob_freq = 20.0
+head_bob_freq = 18.0
 player = NodePath("../..")
 
 [node name="crouch" type="Node" parent="state_machine" node_paths=PackedStringArray("player")]
@@ -165,4 +175,6 @@ player = NodePath("../..")
 script = ExtResource("10_3xthg")
 player = NodePath("../..")
 
+[connection signal="timeout" from="footprinter/normal" to="footprinter" method="_on_normal_timeout"]
 [connection signal="state_changed" from="state_machine" to="." method="_on_state_machine_state_changed"]
+[connection signal="state_changed" from="state_machine" to="footprinter" method="_on_state_machine_state_changed"]
